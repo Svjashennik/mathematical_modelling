@@ -50,10 +50,7 @@ class MarkovChain:
 
     def no_longer_reach(self, of: int, to: int, by: int) -> float:
         """ Вероятность перехода не позднее чем """
-        s = 0
-        for step in range(1, by + 1):
-            s += self.first_reach(of, to, step)
-        return s
+        return sum(self.first_reach(of, to, step) for step in range(1, by + 1))
 
     def mean_reach(self, of: int, to: int) -> float:
         """ Среднее количество шагов для перехода"""
@@ -74,29 +71,20 @@ class MarkovChain:
 
     def no_longer_return(self, of: int, by: int) -> float:
         """ Вероятность возвращения не позднее чем """
-        s = 0
-        for step in range(1, by + 1):
-            s += self.first_return(of, step)
-        return s
+        return sum(self.first_return(of, step) for step in range(1, by + 1))
 
     def mean_return(self, of: int) -> float:
         """ Среднее время возвращения """
-        s = 0
-        for step in range(1, 130):
-            s += step * self.first_return(of, step)
-        return s
+        return sum(step * self.first_return(of, step) for step in range(1, 130))
 
     def stable_condition(self) -> np.array:
+        """ Установивишиеся вероятности """
         m = self.matrix.T - np.eye(self.matrix.shape[0])
         m[-1, :] = 1
         b = np.array([0] * (self.matrix.shape[0] - 1) + [1])
         x = np.dot(np.linalg.inv(m), b)
         return x
 
-
-if __name__ == "__main__1":
-    chain = MarkovChain.from_file("matrix.csv")
-    print(chain.mean_reach(0, 2))
 
 if __name__ == "__main__":
     chain = MarkovChain.from_file("matrix.csv")

@@ -7,6 +7,7 @@ class SMO:
 
     @staticmethod
     def create_matrix(arriving: int, channels: int, intensity: int, max_size: int) -> np.array:
+        """ Создание матрицы переходов """
         matrix = np.zeros((channels + max_size + 1, channels + max_size + 1))
         for i in range(channels + max_size):
             matrix[i, i + 1] = arriving
@@ -80,7 +81,7 @@ class SMO:
         :param probabilities: вероятности
         :param time_step: шаг времени
         :param time: полное время проведения испытаний
-        :return:
+        :return: время нахождения
         """
         k_coefficient = np.zeros(self.matrix.shape)
         for i in subset:
